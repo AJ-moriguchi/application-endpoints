@@ -1,0 +1,2 @@
+# application-endpoints
+Slackなどのイベントを受け取るためのエンドポイントです
