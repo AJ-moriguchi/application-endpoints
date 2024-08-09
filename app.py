@@ -10,7 +10,7 @@ app = Flask(__name__)
 load_dotenv()
 
 # Logging configuration
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s', stream=sys.stdout)
 
 SLACK_BOT_TOKEN = os.getenv('SLACK_BOT_TOKEN')
 API_ENDPOINT = os.getenv('API_ENDPOINT')
@@ -56,7 +56,7 @@ def slack_events():
                 response.raise_for_status()
                 json_content = response.json()
                 api_reply = json.dumps(json_content, ensure_ascii=False, indent=2).replace('\\n', '\n')
-                logging.info("API request successful")
+                logging.info(f"API request successful, response: {api_reply}")
             except requests.exceptions.RequestException as e:
                 logging.error(f"API request failed: {e}")
                 api_reply = "APIリクエストに失敗しました。"
@@ -68,13 +68,17 @@ def slack_events():
             slack_data = {
                 'channel': channel_id,
                 'text': f'<@{user_id}> {api_reply}',
-                'thread_ts': thread_ts
+                'thread_ts': thread_ts  # スレッドに返信しない場合はコメントアウト
             }
-            response = requests.post('https://slack.com/api/chat.postMessage', headers=headers, json=slack_data)
-            if response.status_code == 200:
-                logging.info(f"Message successfully posted to Slack channel {channel_id}")
-            else:
-                logging.error(f"Failed to post message to Slack: {response.status_code} {response.text}")
+            try:
+                response = requests.post('https://slack.com/api/chat.postMessage', headers=headers, json=slack_data)
+                response.raise_for_status()
+                if response.json().get("ok"):
+                    logging.info(f"Message successfully posted to Slack channel {channel_id}")
+                else:
+                    logging.error(f"Failed to post message to Slack: {response.json()}")
+            except requests.exceptions.RequestException as e:
+                logging.error(f"Failed to post message to Slack: {e}")
     
     return jsonify({'status': 'ok'})
 
