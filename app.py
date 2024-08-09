@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 import json
 import logging
+import sys  # sysモジュールをインポート
 
 app = Flask(__name__)
 
@@ -70,7 +71,7 @@ def slack_events():
             slack_data = {
                 'channel': channel_id,
                 'text': f'<@{user_id}> {api_reply}',
-                'thread_ts': thread_ts  # スレッドに返信しない場合はコメントアウト
+                'thread_ts': thread_ts
             }
             try:
                 response = requests.post('https://slack.com/api/chat.postMessage', headers=headers, json=slack_data)
