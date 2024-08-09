@@ -65,7 +65,7 @@ def slack_events():
                 api_reply = "APIリクエストに失敗しました。"
 
             headers = {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json; charset=utf-8',  # charset=utf-8を追加
                 'Authorization': f'Bearer {SLACK_BOT_TOKEN}'
             }
             slack_data = {
