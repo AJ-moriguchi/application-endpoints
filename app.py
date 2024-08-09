@@ -21,6 +21,7 @@ processed_messages = set()  # 処理済みメッセージのtsを保持するセ
 @app.route('/slack/events', methods=['POST'])
 def slack_events():
     data = request.json
+    logging.info(f"SLACK_BOT_TOKEN: {SLACK_BOT_TOKEN}")
     logging.info(f"Received event: {data}")
     
     if 'challenge' in data:
