@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import requests
 from dotenv import load_dotenv
 import os
+
 app = Flask(__name__)
 
 load_dotenv()
@@ -28,10 +29,6 @@ def slack_events():
         if user_id == 'U07F52ZK8E7':  # YOUR_BOT_USER_ID はボットのユーザーIDに置き換えてください
             return jsonify({'status': 'ignored'})
 
-        # Web APIにメッセージを送信して返信を取得
-        # response = requests.post(YOUR_API_ENDPOINT, json={'message': user_message})
-        # api_reply = response.json().get('reply', 'Sorry, I did not understand that.')
-
         # Slackにスレッド内で返信を投稿
         headers = {
             'Content-Type': 'application/json',
@@ -39,7 +36,7 @@ def slack_events():
         }
         slack_data = {
             'channel': channel_id,
-            'text': f'<@{user_id}> {"api_reply"}',
+            'text': f'<@{user_id}> {user_message}',  # 受信したメッセージをそのまま返す
             'thread_ts': thread_ts  # スレッドIDを指定
         }
         requests.post('https://slack.com/api/chat.postMessage', headers=headers, json=slack_data)
