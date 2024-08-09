@@ -25,6 +25,7 @@ def slack_events():
     logging.info(f"Received event: {data}")
     
     if 'challenge' in data:
+        logging.info(f"Is challenge")
         return jsonify({'challenge': data['challenge']})
     
     event = data.get('event', {})
@@ -80,7 +81,9 @@ def slack_events():
                     logging.error(f"Failed to post message to Slack: {response.json()}")
             except requests.exceptions.RequestException as e:
                 logging.error(f"Failed to post message to Slack: {e}")
-    
+    else:
+        logging.info("No message to process")
+
     return jsonify({'status': 'ok'})
 
 if __name__ == '__main__':
