@@ -37,8 +37,8 @@ def slack_events():
         if response.status_code == 200:
             # JSONレスポンスを解析
             json_content = response.json()
-            # Slackに投稿するテキストを抽出（必要に応じてカスタマイズ）
-            api_reply = json.dumps(json_content, ensure_ascii=False, indent=2)  # JSONをフォーマットして文字列に変換
+            # Slackに投稿するテキストを抽出し、改行コードを変換
+            api_reply = json.dumps(json_content, ensure_ascii=False, indent=2).replace('\\n', '\n')
         else:
             api_reply = "APIリクエストに失敗しました。"
 
