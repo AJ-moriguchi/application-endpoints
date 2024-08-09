@@ -31,7 +31,7 @@ def slack_events():
     
     event = data.get('event', {})
     
-    if event.get('type') == 'message' and 'subtype' not in event:
+    if event.get('type') == 'app_mention' and 'subtype' not in event:
         user_message = event.get('text')
         user_id = event.get('user')
         channel_id = event.get('channel')
