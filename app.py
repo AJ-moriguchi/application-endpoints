@@ -11,7 +11,7 @@ load_dotenv()
 SLACK_BOT_TOKEN = os.getenv('SLACK_BOT_TOKEN')
 API_ENDPOINT = os.getenv('API_ENDPOINT')
 API_AUTHORIZATION = os.getenv('API_AUTHORIZATION')
-BOT_USER_ID = 'U07GM5NKDUH'  # ここをボットのユーザーIDに置き換えてください
+BOT_USER_ID = 'U07F52ZK8E7'  # ここをボットのユーザーIDに置き換えてください
 processed_messages = set()  # 処理済みメッセージのtsを保持するセット
 
 @app.route('/slack/events', methods=['POST'])
