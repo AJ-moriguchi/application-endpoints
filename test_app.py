@@ -24,7 +24,7 @@ class SlackEventTestCase(unittest.TestCase):
                 "type": "message",
                 "text": "Hello",
                 "user": "U123456",
-                "channel": "C123456"
+                "channel": "C07F27STTDK"
             }
         }
         response = self.app.post('/slack/events', data=json.dumps(event_data), content_type='application/json')
