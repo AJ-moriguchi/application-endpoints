@@ -55,12 +55,11 @@ def slack_events():
             # APIリクエストを送信
             try:
                 response = requests.get(API_ENDPOINT, headers={'Authorization': API_AUTHORIZATION}, params={'q': user_message})
-                logging.info(f"API request sent to: {API_ENDPOINT}")
-                logging.info(f"API request headers: {response.request.headers}")
-                logging.info(f"API request params: {response.request.body}")
                 response.raise_for_status()
                 json_content = response.json()
                 api_reply = json.dumps(json_content, ensure_ascii=False, indent=2).replace('\\n', '\n')
+                # ダブルクォーテーションを取り除く
+                api_reply = api_reply.replace('"', '')  
                 logging.info(f"API request successful, response: {api_reply}")
             except requests.exceptions.RequestException as e:
                 logging.error(f"API request failed: {e}")
@@ -72,14 +71,11 @@ def slack_events():
             }
             slack_data = {
                 'channel': channel_id,
-                'text': f'<@{user_id}> {api_reply}',
+                'text': f'<@{user_id}>\n{api_reply}',
                 'thread_ts': thread_ts
             }
             try:
                 response = requests.post('https://slack.com/api/chat.postMessage', headers=headers, json=slack_data)
-                logging.info(f"Slack API request sent to: https://slack.com/api/chat.postMessage")
-                logging.info(f"Slack API request headers: {response.request.headers}")
-                logging.info(f"Slack API request body: {slack_data}")
                 response.raise_for_status()
                 response_json = response.json()
                 if response_json.get("ok"):
