@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 import json
 import logging
-import sys  # sysモジュールをインポート
+import sys
 
 app = Flask(__name__)
 
@@ -22,7 +22,6 @@ processed_messages = set()  # 処理済みメッセージのtsを保持するセ
 @app.route('/slack/events', methods=['POST'])
 def slack_events():
     data = request.json
-    logging.info(f"SLACK_BOT_TOKEN: {SLACK_BOT_TOKEN}")
     logging.info(f"Received event: {data}")
     
     if 'challenge' in data:
@@ -56,6 +55,9 @@ def slack_events():
             # APIリクエストを送信
             try:
                 response = requests.get(API_ENDPOINT, headers={'Authorization': API_AUTHORIZATION}, params={'q': user_message})
+                logging.info(f"API request sent to: {API_ENDPOINT}")
+                logging.info(f"API request headers: {response.request.headers}")
+                logging.info(f"API request params: {response.request.body}")
                 response.raise_for_status()
                 json_content = response.json()
                 api_reply = json.dumps(json_content, ensure_ascii=False, indent=2).replace('\\n', '\n')
@@ -75,11 +77,15 @@ def slack_events():
             }
             try:
                 response = requests.post('https://slack.com/api/chat.postMessage', headers=headers, json=slack_data)
+                logging.info(f"Slack API request sent to: https://slack.com/api/chat.postMessage")
+                logging.info(f"Slack API request headers: {response.request.headers}")
+                logging.info(f"Slack API request body: {slack_data}")
                 response.raise_for_status()
-                if response.json().get("ok"):
+                response_json = response.json()
+                if response_json.get("ok"):
                     logging.info(f"Message successfully posted to Slack channel {channel_id}")
                 else:
-                    logging.error(f"Failed to post message to Slack: {response.json()}")
+                    logging.error(f"Failed to post message to Slack: {response_json}")
             except requests.exceptions.RequestException as e:
                 logging.error(f"Failed to post message to Slack: {e}")
     else:
