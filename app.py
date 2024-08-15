@@ -58,7 +58,7 @@ def slack_events():
                 response.raise_for_status()
                 json_content = response.json()
                 api_reply = json.dumps(json_content, ensure_ascii=False, indent=2).replace('\\n', '\n')
-                # ダブルクォーテーションを取り除く
+                # ダブルクォーテーションを取り除く。
                 api_reply = api_reply.replace('"', '')  
                 logging.info(f"API request successful, response: {api_reply}")
             except requests.exceptions.RequestException as e:
