@@ -89,25 +89,6 @@ def slack_events():
 
     return jsonify({'status': 'ok'})
 
-@app.route('/api', methods=['POST'])
-def process_message():
-    data = request.json
-    user_message = data.get('message', '')
-
-    # 以下の部分はslack_events関数からコピーしてきたものです。
-    try:
-        response = requests.get(API_ENDPOINT, headers={'Authorization': API_AUTHORIZATION}, params={'q': user_message})
-        response.raise_for_status()
-        json_content = response.json()
-        api_reply = json.dumps(json_content, ensure_ascii=False, indent=2).replace('\\n', '\n')
-        api_reply = api_reply.replace('"', '')  # ダブルクォーテーションを取り除く
-        logging.info(f"API request successful, response: {api_reply}")
-    except requests.exceptions.RequestException as e:
-        logging.error(f"API request failed: {e}")
-        api_reply = "APIリクエストに失敗しました。"
-
-    return jsonify({'response': api_reply})
-
 if __name__ == '__main__':
     logging.info("Starting Flask app on port 3000")
     app.run(port=3000)
