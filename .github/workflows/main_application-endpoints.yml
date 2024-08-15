@@ -75,3 +75,6 @@ jobs:
         with:
           app-name: 'application-endpoints'
           slot-name: 'Production'
+
+      - name: Set startup command
+        run: az webapp config set --resource-group ajsystem-api --name application-endpoints --startup-file "streamlit run app.py --server.port 8000 --server.headless true"
