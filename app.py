@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(mess
 SLACK_BOT_TOKEN = os.getenv('SLACK_BOT_TOKEN')
 API_ENDPOINT = os.getenv('API_ENDPOINT')
 API_AUTHORIZATION = os.getenv('API_AUTHORIZATION')
-BOT_USER_ID = 'U07GM5NKDUH'  # ここをボットのユーザーIDに置き換えてください
+BOT_USER_ID = os.getenv('BOT_USER_ID')
 processed_messages = set()  # 処理済みメッセージのtsを保持するセット
 
 @app.route('/slack/events', methods=['POST'])
